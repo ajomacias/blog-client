@@ -1,0 +1,22 @@
+.spinner {
+
+    animation: spinner 900ms infinite; 
+    background-image: url('../assets/load.png');
+    width: 70px;
+    height: 70px;
+    background-size: cover;
+    width: 100;
+    margin: auto;
+}
+
+@keyframes spinner {
+
+    to {
+        transform: rotate(0);
+    }
+
+    from {
+        transform: rotate(360deg);
+    }
+
+}

@@ -1,0 +1,38 @@
+.textarea-comment{
+    width: 100%;
+    resize: none;
+    outline: none;
+    border : none;
+    padding: 1px;
+    margin: 0;
+    font-size: medium; 
+    height: auto;
+}
+.textarea-comment:focus{
+    outline: none;
+}
+
+.input-search{
+    border: none;
+    border-bottom: 0.1rem;
+    border-bottom-style: solid;
+    border-bottom-color:transparent;
+    margin-bottom: -0.1rem;
+    padding: 2px;
+}
+
+.btn-search{  
+    border: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    text-align: center;
+    height: fit-content;
+    cursor: pointer;
+}
+
+.input-search:focus{
+    outline: none;
+    border-bottom: 0.1rem solid var(--primary);
+    
+} 

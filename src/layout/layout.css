@@ -1,0 +1,41 @@
+.header{
+  
+    background-color: var(--primary);
+    height: 4.4rem;
+    width: 100%;
+    transition: all 3s cubic-bezier(0.19, 1, 0.22, 1); 
+    
+
+}
+
+.header ul {
+    display:  flex;
+    height: 100%;
+    align-items: center;
+    margin: 0;
+    justify-content: space-between;
+    padding : 0 2rem;
+
+}
+.header ul li{ 
+    list-style: none; 
+}
+
+.nav-link{
+  color : white;
+  transition: width 2s;
+  text-decoration: none;
+  padding: 0.4rem;
+  font-weight: bold;
+  cursor: pointer; 
+}
+
+.nav-link:hover{
+    color : wheat ; 
+      
+}
+
+.nav-active{
+    border-bottom: 0.15rem solid white; 
+    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275);    
+}

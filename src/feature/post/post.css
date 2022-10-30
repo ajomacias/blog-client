@@ -1,0 +1,12 @@
+.max-width{
+    max-width: 240px;
+}
+
+.bg-primary-opacity{
+    background-color: rgba(14, 164, 233, 0.474); 
+} 
+
+.comment-card{
+    border-radius: 1%;
+    border-bottom: 1px solid rgb(228, 227, 227); 
+}
