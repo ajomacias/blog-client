@@ -8,7 +8,6 @@ function PartNertProfile({ user } : props){
 
     const { setOpt } = useMenuContext()!;
 
-
     return(
         <div className="flex wrap flex-col w-full" >
 
@@ -26,7 +25,7 @@ function PartNertProfile({ user } : props){
                     { user.profile && user.profile.description }
                     </blockquote>     
                     </div>
-                    <p >{user.created}</p>
+                    <p>Se unio el {user.created}</p>
                 </div>
             </figure>
 

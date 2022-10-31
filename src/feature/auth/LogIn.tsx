@@ -60,9 +60,7 @@ export const action: ActionFunction = async ({ request }) => {
     const userObject = Object.fromEntries(formData);
 
     const res = await logIn(userObject);
-    if (!res.success) return redirect('auth')
-
-
+    if (!res.success) return redirect('')
 
 
     return res.data;

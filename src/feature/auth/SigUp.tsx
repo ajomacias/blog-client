@@ -40,7 +40,9 @@ export const action: ActionFunction = async ({ request }) => {
     const userObject =  Object.fromEntries(formData);
     const res = await sigUp(userObject);
 
-  return redirect('')
+    if(res.success) return redirect('/auth');
+
+    return redirect('');
 
 }
 

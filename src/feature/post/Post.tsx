@@ -18,7 +18,7 @@ function Post(){
             <PartNertPost data={{user : post.user, date : post.created}} />
             <div className="flex wrap flex-col" > 
                 <h1>{post.name}</h1>
-                <p>{post.description}</p>
+                <p className="pre-wrap" >{post.description}</p>
             </div>
             <div className="divider"></div>
             <Comments postId={post.id} />

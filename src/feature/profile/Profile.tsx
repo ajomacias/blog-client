@@ -34,8 +34,14 @@ export async function loader({ params }: propsLoader){
         status : 500,
         statusText : res.error
     });
+    const options : Intl.DateTimeFormatOptions = {  year: 'numeric', month: 'long', day: 'numeric' };
 
-    return res.data as sortUser;
+
+
+    const data = res.data as sortUser;
+    data.created = new Date(data.created).toLocaleDateString(undefined, options)
+
+    return data;
 
 } 
 
