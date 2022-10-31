@@ -22,7 +22,6 @@ function LogIn() {
                         placeholder="Nombre usuario"
                         className="input" type="text" name="name" />
 
-
                     <label>
                         Contrasena
                     </label>
@@ -48,7 +47,6 @@ function LogIn() {
 
         navigation('/home');
     }
-
 
 }
 
