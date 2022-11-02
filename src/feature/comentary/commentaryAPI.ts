@@ -1,7 +1,7 @@
 import { Response as ResponseAPI } from "../../types/ResponseAPI";
 import { CommentSave } from "./types";
 
-const comentaryhUrl = 'http://192.168.200.12:3000/api/v1/comentary';
+const comentaryhUrl = env + '/api/v1/comentary';
 const headers = {
     'Content-Type' : 'application/json'
 }

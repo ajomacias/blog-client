@@ -1,6 +1,6 @@
 import { Response as ResponseAPI } from "../../types/ResponseAPI";
 
-const postUrl = 'http://192.168.200.12:3000/api/v1/profile';
+const postUrl = env + '/api/v1/profile';
 const headers = {
     'Content-Type' : 'application/json'
 }
