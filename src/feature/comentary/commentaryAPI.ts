@@ -1,7 +1,8 @@
+import { env } from "../../enviroments/enviroment";
 import { Response as ResponseAPI } from "../../types/ResponseAPI";
 import { CommentSave } from "./types";
 
-const comentaryhUrl = env + '/api/v1/comentary';
+const comentaryhUrl = env.url + '/api/v1/comentary';
 const headers = {
     'Content-Type' : 'application/json'
 }

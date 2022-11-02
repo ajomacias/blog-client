@@ -1,6 +1,7 @@
+import { env } from "../../enviroments/enviroment";
 import { Response as ResponseAPI } from "../../types/ResponseAPI";
 
-const postUrl = env + '/api/v1/profile';
+const postUrl = env.url + '/api/v1/profile';
 const headers = {
     'Content-Type' : 'application/json'
 }

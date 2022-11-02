@@ -1,7 +1,7 @@
 import { Response  } from "../../types/ResponseAPI";
-import { env } from "../../enviroments/enviroment";
+import { env  } from "../../enviroments/enviroment";
 
-const authUrl = env +'/api/v1/auth';
+const authUrl = env.url +'/api/v1/auth';
 const headers = {
     'Content-Type' : 'application/json'
 }
