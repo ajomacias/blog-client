@@ -1,6 +1,6 @@
 #! /bin/bash
 
-destination_folder='/home/ubuntu/proyects/blog-server/src/public'
+destination_folder='/home/ander/Escritorio/proyects/blog/blog-server/src/public'
 
 npm run build
 
