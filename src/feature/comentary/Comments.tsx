@@ -7,6 +7,7 @@ import { getComentaries } from "./commentaryAPI";
 import { useNavigation } from "react-router-dom";
 import Spinner from "../../global/Spinner";
 import { getNextPage } from "../../utils/paginable";
+import { getSocket } from "../../core";
 
 function Comments({ postId }: propsComments) {
 
@@ -14,6 +15,8 @@ function Comments({ postId }: propsComments) {
         count: NaN,
         values: []
     });
+
+    const socket = getSocket(`${postId}`);
 
     const navigation = useNavigation();
 
@@ -26,9 +29,21 @@ function Comments({ postId }: propsComments) {
 
     }, [data]);
 
+
     useEffect(()=>{
         OnChangeNavigation();
     },[navigation]);
+
+
+    useEffect(()=>{
+
+        socket.on('write', ()=>{
+            console.log('alguien esta escribiendo')
+        });
+
+        return ()=>{ socket.close() };
+
+    },[])
 
     const refDiv = useRef<HTMLDivElement>(null);
 
@@ -39,7 +54,9 @@ function Comments({ postId }: propsComments) {
     return (
         <div ref={refDiv} className="w-full" >
             <h2>Comentarios<span>({data.count})</span> </h2>
-
+             <button onClick={()=>{
+                socket.emit('write');
+             }} >click</button>
             <WriteComment />
 
             {data.values.length > 0 &&
@@ -90,8 +107,8 @@ function Comments({ postId }: propsComments) {
 
 
         setLoading(true)
-        let values = await getComments(nextPage.toString());
-        let newValues = [...data.values, ...values.values];
+        const values = await getComments(nextPage.toString());
+        const newValues = [...data.values, ...values.values];
         setData({ count: values.count, values: newValues });
         setLoading(false);
 

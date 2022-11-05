@@ -1,6 +1,7 @@
+import { env } from "../../enviroments/enviroment";
 import { Response as ResponseAPI } from "../../types/ResponseAPI";
 
-const postUrl = 'http://192.168.200.12:3000/api/v1/post';
+const postUrl = env.url + '/api/v1/post';
 const headers = {
     'Content-Type' : 'application/json'
 }
