@@ -1,13 +1,15 @@
 import Commentary from "./Commentary";
 import { ResponseComments } from "./types";
-import './commentary.css';
 import WriteComment from "./WriteComment";
 import { useEffect, useRef, useState } from "react";
 import { getComentaries } from "./commentaryAPI";
 import { useNavigation } from "react-router-dom";
 import Spinner from "../../global/Spinner";
 import { getNextPage } from "../../utils/paginable";
-import { getSocket } from "../../core";
+import { useCommentContext } from "../../providers/ CommenProvider";
+import './commentary.css';
+import { loadType } from "../post/types";
+import Load from "./Load";
 
 function Comments({ postId }: propsComments) {
 
@@ -16,11 +18,15 @@ function Comments({ postId }: propsComments) {
         values: []
     });
 
-    const socket = getSocket(`${postId}`);
+    const [ countWrite, setCountWrite ] = useState(0);
+
+    const { socket } = useCommentContext()!;
 
     const navigation = useNavigation();
 
-    const [loading, setLoading] = useState(false);
+    const [load, setLoad] = useState<loadType>({
+        loading : false,
+    });
 
     useEffect(() => {
         componentMount();
@@ -29,7 +35,6 @@ function Comments({ postId }: propsComments) {
 
     }, [data]);
 
-
     useEffect(()=>{
         OnChangeNavigation();
     },[navigation]);
@@ -37,35 +42,51 @@ function Comments({ postId }: propsComments) {
 
     useEffect(()=>{
 
-        socket.on('write', ()=>{
-            console.log('alguien esta escribiendo')
+        socket.on('no-write',()=>{
+
+
+            if(!countWrite) return;
+
+            setCountWrite(countWrite - 1);
+
+        });
+
+    },[countWrite])
+
+
+    useEffect(()=>{
+
+        socket.emit('join', { 
+            post :`${postId}`,
+            user : 'Ander'  
+        })
+
+        socket.on('write', (args)=>{
+           setCountWrite(countWrite + 1);
         });
 
         return ()=>{ socket.close() };
 
-    },[])
+    },[socket])
 
     const refDiv = useRef<HTMLDivElement>(null);
 
     let oldScrollY = 0;
 
 
-
     return (
         <div ref={refDiv} className="w-full" >
             <h2>Comentarios<span>({data.count})</span> </h2>
-             <button onClick={()=>{
-                socket.emit('write');
-             }} >click</button>
             <WriteComment />
-
+            {Boolean(countWrite) && <Load  message={'alguien esta escribiendo'}/> }
             {data.values.length > 0 &&
                 data.values.map((comment, i) => (
                     <Commentary key={i} comentary={comment} />
-                ))
+            ))
             }
-            {loading && <Spinner />}
+            {load.loading && <Spinner />}
             <WriteComment />
+            {Boolean(countWrite) && <Load  message={'alguien esta escribiendo'}/> }
         </div>
     )
 
@@ -84,16 +105,15 @@ function Comments({ postId }: propsComments) {
 
     }
 
-    async function handlerScroll(event: Event) :Promise<unknown> {
+    async function handlerScroll() :Promise<unknown> {
 
         const myDiv = refDiv.current;
-        if (loading) return;
+        if (load.loading) return;
 
-        let documentHeight = document.body.scrollHeight;
-        let currentScroll = window.scrollY + window.innerHeight;
+        const documentHeight = document.body.scrollHeight;
+        const currentScroll = window.scrollY + window.innerHeight;
 
         let modifier = 200;
-
 
         const { bottom } = myDiv!.getClientRects()[0] as DOMRect;
         if (oldScrollY < bottom) return oldScrollY = bottom;
@@ -106,21 +126,21 @@ function Comments({ postId }: propsComments) {
         if (!nextPage) return document.removeEventListener('scroll', handlerScroll);
 
 
-        setLoading(true)
+        setLoad({...load, loading : true})
         const values = await getComments(nextPage.toString());
         const newValues = [...data.values, ...values.values];
         setData({ count: values.count, values: newValues });
-        setLoading(false);
-
+        setData({ count: values.count, values: newValues });
+        setLoad({...load, loading : false})
     }
 
     async function componentMount() {
 
         document.addEventListener('scroll', handlerScroll);
         if (data.count || data.count == 0) return;
-        setLoading(true);
+        setLoad({...load, loading : true})
         setData(await getComments());
-        setLoading(false);
+        setLoad({...load, loading : false})
 
     }
     function componentUnMount() {
@@ -132,7 +152,6 @@ function Comments({ postId }: propsComments) {
     }
 
 }
-
 
 export default Comments;
 

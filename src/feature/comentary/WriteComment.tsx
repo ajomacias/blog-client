@@ -1,5 +1,6 @@
-import { Fragment, useRef } from "react";
-import { Form, redirect, useNavigation } from "react-router-dom";
+import { Fragment, useEffect, useRef } from "react";
+import { Form, redirect, useNavigation, useParams } from "react-router-dom";
+import { useCommentContext } from "../../providers/ CommenProvider";
 import { useAuthContext } from "../../providers/AuthProvider";
 import { propsLoader } from "../../types/props";
 import { saveComentary } from "./commentaryAPI";
@@ -9,6 +10,10 @@ function WriteComment(){
     const navigation = useNavigation();
     const { session } = useAuthContext()!;
 
+    const { id } = useParams();
+  
+    const { socket } = useCommentContext()!;
+
     const commentRef = useRef<HTMLTextAreaElement>(null);
 
     const submiting = navigation.state === 'submitting'
@@ -16,8 +21,18 @@ function WriteComment(){
         <Fragment>
         <h3>Enviar comentario</h3>
             <Form method="post" action="create-comment" >
-                <input type="number" hidden={true} readOnly={true} value={session.id} name="user" id="user" />
-                <textarea onKeyUp={handleKeyUp} 
+                <input 
+                type="number" 
+                hidden={true} 
+                readOnly={true} 
+                value={session.id} 
+                name="user" 
+                id="user" 
+                />
+                <textarea 
+                onFocus={handlerFocus}
+                onBlur={handlerFocusOut}
+                onKeyUp={handleKeyUp} 
                 className="invicible-scroll input textarea-comment" 
                 cols={1} 
                 ref={ commentRef }
@@ -39,6 +54,14 @@ function WriteComment(){
         const textArea = event.currentTarget;
         textArea.style.height = 'auto'
         textArea.style.height = `${textArea.scrollHeight}px`
+    }
+
+    function handlerFocus(){
+        socket.emit('write', { id : session.id, post : id });
+    }
+
+    function handlerFocusOut(){
+        socket.emit('no-write', { id : session.id, post : id });
     }
 
     function handlerCancel(){

@@ -42,3 +42,8 @@ export interface ResponsePost{
 export type propsPartnertPost = {
     data : userPartnert
 }
+
+export type loadType = {
+    loading : boolean
+    socket? : boolean
+};

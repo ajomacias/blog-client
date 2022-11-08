@@ -28,7 +28,6 @@ const postRoutes : RouteObject[] = [
         element : <NewPost />,
         action : newPostAction
     }
-
 ];
 
  export default postRoutes;

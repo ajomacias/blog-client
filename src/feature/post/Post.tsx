@@ -4,14 +4,11 @@ import Comments from "../comentary/Comments";
 import PartNertPost from "./PartNertPost";
 import { PostUnique } from "./types";
 import { getPost } from "./postAPI";
+import CommentProvider from "../../providers/ CommenProvider";
 
 function Post(){
 
-
-
     const post = useLoaderData() as PostUnique;
-
-
 
     return(
             <div className="w-full" > 
@@ -21,7 +18,9 @@ function Post(){
                 <p className="pre-wrap" >{post.description}</p>
             </div>
             <div className="divider"></div>
+            <CommentProvider>
             <Comments postId={post.id} />
+            </CommentProvider>
             </div> 
     )
 
