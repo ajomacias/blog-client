@@ -1,12 +1,12 @@
 import Commentary from "./Commentary";
-import { ResponseComments } from "./types";
+import { ResponseComments,Comment } from "./types";
 import WriteComment from "./WriteComment";
 import { useEffect, useRef, useState } from "react";
 import { getComentaries } from "./commentaryAPI";
-import { useNavigation } from "react-router-dom";
+import { useActionData, useNavigation } from "react-router-dom";
 import Spinner from "../../global/Spinner";
 import { getNextPage } from "../../utils/paginable";
-import { useCommentContext } from "../../providers/ CommenProvider";
+import { useCommentContext } from "../../providers/ CommentProvider";
 import './commentary.css';
 import { loadType } from "../post/types";
 import Load from "./Load";
@@ -18,11 +18,13 @@ function Comments({ postId }: propsComments) {
         values: []
     });
 
+    const dataAction = useActionData();
+
+
     const [ countWrite, setCountWrite ] = useState(0);
 
     const { socket } = useCommentContext()!;
 
-    const navigation = useNavigation();
 
     const [load, setLoad] = useState<loadType>({
         loading : false,
@@ -35,14 +37,26 @@ function Comments({ postId }: propsComments) {
 
     }, [data]);
 
-    useEffect(()=>{
-        OnChangeNavigation();
-    },[navigation]);
 
 
     useEffect(()=>{
 
-        socket.on('no-write',()=>{
+        if(!dataAction) return;
+
+        setData({count : data.count + 1,values : [dataAction as Comment,...data.values]});
+        
+        if(!socket) return;
+
+        socket.emit('comment', {...dataAction, post : `${postId}`});
+
+    },[dataAction]);
+
+
+    useEffect(()=>{
+        
+        if(!socket) return;
+
+        socket!.on('no-write',()=>{
 
 
             if(!countWrite) return;
@@ -51,11 +65,12 @@ function Comments({ postId }: propsComments) {
 
         });
 
-    },[countWrite])
+    },[countWrite]);
 
 
     useEffect(()=>{
 
+        if(!socket) return;
         socket.emit('join', { 
             post :`${postId}`,
             user : 'Ander'  
@@ -65,9 +80,12 @@ function Comments({ postId }: propsComments) {
            setCountWrite(countWrite + 1);
         });
 
-        return ()=>{ socket.close() };
+        socket.on('comment', (comment)=>{
+            setData({count : data.count + 1,values : [comment as Comment,...data.values]});
 
-    },[socket])
+        });
+
+    },[socket]);
 
     const refDiv = useRef<HTMLDivElement>(null);
 
@@ -85,8 +103,10 @@ function Comments({ postId }: propsComments) {
             ))
             }
             {load.loading && <Spinner />}
-            <WriteComment />
+            <div className="mb-2" ></div>
             {Boolean(countWrite) && <Load  message={'alguien esta escribiendo'}/> }
+            <WriteComment />
+          
         </div>
     )
 
@@ -140,15 +160,11 @@ function Comments({ postId }: propsComments) {
         if (data.count || data.count == 0) return;
         setLoad({...load, loading : true})
         setData(await getComments());
-        setLoad({...load, loading : false})
+        setLoad({...load, loading : false});
 
     }
     function componentUnMount() {
         document.removeEventListener('scroll', handlerScroll);
-    }
-
-   async function OnChangeNavigation(){
-        if(navigation.state == 'idle') setData(await getComments())
     }
 
 }

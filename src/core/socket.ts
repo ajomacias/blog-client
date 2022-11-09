@@ -8,10 +8,10 @@ export function getSocket(nameSpace : string){
     const socket = io(room, {
         autoConnect : false
     });
-    //socket.open()
 
 
 
-    return socket;
+
+    return socket.connect();
 
 }

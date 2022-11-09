@@ -4,7 +4,7 @@ import Comments from "../comentary/Comments";
 import PartNertPost from "./PartNertPost";
 import { PostUnique } from "./types";
 import { getPost } from "./postAPI";
-import CommentProvider from "../../providers/ CommenProvider";
+import CommentProvider from "../../providers/ CommentProvider";
 
 function Post(){
 

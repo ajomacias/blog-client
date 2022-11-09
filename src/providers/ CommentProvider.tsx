@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { getSocket } from "../core";
 import { Props } from "../types/props";
@@ -7,15 +7,17 @@ const commentContext = createContext<null | CommentContext>(null);
 
 function CommentProvider({ children }:Props){
 
-    const socket = getSocket('comment');
+    const [ socket, setSocket ] = useState<null | Socket>(null);
 
     useEffect(()=>{
+        const newSocket = getSocket('comment');
 
-        socket.connect();
-        
+        setSocket(newSocket);
 
-        return ()=>{socket.close()};
-    },[socket]);
+        return ()=>{
+            if(!socket) return
+            socket.close();};
+    },[setSocket]);
 
     return (
         <commentContext.Provider value={{ socket }} >
@@ -31,5 +33,5 @@ export function useCommentContext(){
 export default CommentProvider;
 
 export type CommentContext = {
-    socket : Socket
+    socket : Socket | null
 }

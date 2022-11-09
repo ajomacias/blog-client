@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useRef } from "react";
-import { Form, redirect, useNavigation, useParams } from "react-router-dom";
-import { useCommentContext } from "../../providers/ CommenProvider";
+import { Fragment,  useRef } from "react";
+import { Form, useNavigation, useParams } from "react-router-dom";
+import { useCommentContext } from "../../providers/ CommentProvider";
 import { useAuthContext } from "../../providers/AuthProvider";
 import { propsLoader } from "../../types/props";
 import { saveComentary } from "./commentaryAPI";
@@ -17,10 +17,12 @@ function WriteComment(){
     const commentRef = useRef<HTMLTextAreaElement>(null);
 
     const submiting = navigation.state === 'submitting'
+
     return(
         <Fragment>
         <h3>Enviar comentario</h3>
-            <Form method="post" action="create-comment" >
+            <Form  
+                method="post">
                 <input 
                 type="number" 
                 hidden={true} 
@@ -57,16 +59,19 @@ function WriteComment(){
     }
 
     function handlerFocus(){
+        if(!socket) return;
         socket.emit('write', { id : session.id, post : id });
     }
 
     function handlerFocusOut(){
+        if(!socket) return;
         socket.emit('no-write', { id : session.id, post : id });
     }
 
     function handlerCancel(){
         commentRef.current!.value = '';
     }
+
 }
 
 export async function action({ params, request }: propsLoader) {
@@ -85,7 +90,7 @@ export async function action({ params, request }: propsLoader) {
         statusText : response.error
     })
 
-    return redirect(`/posts/${idPost}`)
+    return response.data;
 
 }
 

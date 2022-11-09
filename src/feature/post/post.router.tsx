@@ -17,10 +17,7 @@ const postRoutes : RouteObject[] = [
     {
         path : ':id',
         element : <Post />,
-        loader:PostLoader
-    },
-    {
-        path : ':id/create-comment',
+        loader:PostLoader,
         action :  commentAction
     },
     {
